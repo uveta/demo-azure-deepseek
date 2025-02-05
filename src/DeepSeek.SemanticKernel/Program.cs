@@ -14,15 +14,19 @@ const string SystemMessage =
     """
     Assistant is a conversational agent named DeepSeek. It's purpose is to discuss any topic with the user.
     Initially greet the user, introduce yourself, and mention that conversation can be stopped by typing "exit" in the chat. Then continue with the conversation.
-    Limit answers to 100-200 words. If the user asks for more information, provide a brief answer and ask if they would like more details.
+    Limit answers to 50-100 words. If the user asks for more information, provide a brief answer and ask if they would like more details.
     """;
 
-var kernel = SetupKernel();
-var executionSettings = GetPromptExecutionSettings();
+var builder = Kernel.CreateBuilder().AddAzureAIInferenceChatCompletion(ModelId, ApiKey, new Uri(Endpoint));
+builder.Services.AddLogging(loggingBuilder => loggingBuilder.SetMinimumLevel(LogLevel.Information).AddConsole());
+var kernel = builder.Build();
+var executionSettings = new AzureAIInferencePromptExecutionSettings { MaxTokens = 2048 };
+var chatCompletion = kernel.GetRequiredService<IChatCompletionService>();
 
 ChatHistory history = [];
 history.AddSystemMessage(SystemMessage);
-string? output = await ChatCompletionAsync();
+var result = await chatCompletion.GetChatMessageContentAsync(history, executionSettings);
+string? output = result.Content;
 if (!string.IsNullOrEmpty(output))
 {
     WriteAgentMessage(output);
@@ -33,7 +37,8 @@ do
     string? input = ReadUserMessage();
     if (input is null || input.Equals("exit", StringComparison.OrdinalIgnoreCase)) break;
     history.AddUserMessage(input);
-    output = await ChatCompletionAsync();
+    result = await chatCompletion.GetChatMessageContentAsync(history, executionSettings);
+    output = result.Content;
     if (string.IsNullOrEmpty(output))
     {
         WriteAgentMessage("Exiting...");
@@ -44,28 +49,6 @@ do
 } while (true);
 return;
 
-Kernel SetupKernel()
-{
-    var builder = Kernel.CreateBuilder().AddAzureAIInferenceChatCompletion(ModelId, ApiKey, new Uri(Endpoint));
-    builder.Services.AddLogging(loggingBuilder => loggingBuilder.SetMinimumLevel(LogLevel.Trace).AddConsole());
-    return builder.Build();
-}
-
-async ValueTask<string?> ChatCompletionAsync()
-{
-    var chatCompletion = kernel.GetRequiredService<IChatCompletionService>();
-    var result = await chatCompletion.GetChatMessageContentAsync(
-        history,
-        executionSettings,
-        kernel,
-        CancellationToken.None);
-    return result.Content;
-}
-
-PromptExecutionSettings GetPromptExecutionSettings()
-{
-    return new AzureAIInferencePromptExecutionSettings { MaxTokens = 2048 };
-}
 
 string? ReadUserMessage()
 {
