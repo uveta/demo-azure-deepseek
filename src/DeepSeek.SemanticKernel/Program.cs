@@ -17,38 +17,42 @@ const string SystemMessage =
     Limit answers to 50-100 words. If the user asks for more information, provide a brief answer and ask if they would like more details.
     """;
 
-var builder = Kernel.CreateBuilder().AddAzureAIInferenceChatCompletion(ModelId, ApiKey, new Uri(Endpoint));
-builder.Services.AddLogging(loggingBuilder => loggingBuilder.SetMinimumLevel(LogLevel.Information).AddConsole());
-var kernel = builder.Build();
-var executionSettings = new AzureAIInferencePromptExecutionSettings { MaxTokens = 2048 };
-var chatCompletion = kernel.GetRequiredService<IChatCompletionService>();
+try
+{
+    var builder = Kernel.CreateBuilder().AddAzureAIInferenceChatCompletion(ModelId, ApiKey, new Uri(Endpoint));
+    builder.Services.AddLogging(loggingBuilder => loggingBuilder.SetMinimumLevel(LogLevel.Information).AddConsole());
+    var kernel = builder.Build();
+    var executionSettings = new AzureAIInferencePromptExecutionSettings { MaxTokens = 2048 };
+    var chatCompletion = kernel.GetRequiredService<IChatCompletionService>();
 
-ChatHistory history = [];
-history.AddSystemMessage(SystemMessage);
-var result = await chatCompletion.GetChatMessageContentAsync(history, executionSettings);
-string? output = result.Content;
-if (!string.IsNullOrEmpty(output))
-{
-    WriteAgentMessage(output);
-    history.AddAssistantMessage(output);
-}
-do
-{
-    string? input = ReadUserMessage();
-    if (input is null || input.Equals("exit", StringComparison.OrdinalIgnoreCase)) break;
-    history.AddUserMessage(input);
-    result = await chatCompletion.GetChatMessageContentAsync(history, executionSettings);
-    output = result.Content;
-    if (string.IsNullOrEmpty(output))
+    ChatHistory history = [];
+    history.AddSystemMessage(SystemMessage);
+    var response = await chatCompletion.GetChatMessageContentAsync(history, executionSettings);
+    string? output = response.Content;
+    if (!string.IsNullOrEmpty(output))
     {
-        WriteAgentMessage("Exiting...");
-        break;
+        WriteAgentMessage(output);
+        history.AddAssistantMessage(output);
     }
-    WriteAgentMessage(output);
-    history.AddAssistantMessage(output);
-} while (true);
+    do
+    {
+        string? input = ReadUserMessage();
+        if (input is null || input.Equals("exit", StringComparison.OrdinalIgnoreCase)) break;
+        history.AddUserMessage(input);
+        response = await chatCompletion.GetChatMessageContentAsync(history, executionSettings);
+        output = response.Content;
+        if (string.IsNullOrEmpty(output)) break;
+        WriteAgentMessage(output);
+        history.AddAssistantMessage(output);
+    } while (true);
+}
+catch (Exception e)
+{
+    Console.WriteLine($"Error: {e.Message}");
+    Console.WriteLine(e.StackTrace);
+}
+WriteAgentMessage("Exiting...");
 return;
-
 
 string? ReadUserMessage()
 {
