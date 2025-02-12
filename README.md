@@ -1,14 +1,15 @@
 <!-- Improved compatibility of back to top link -->
+
 <a id="readme-top"></a>
 
 <!-- PROJECT SHIELDS -->
+
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![MIT][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
-
 
 <!-- PROJECT LOGO -->
 <br />
@@ -31,8 +32,6 @@
   </p>
 </div>
 
-
-
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
@@ -47,7 +46,8 @@
       <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
+        <li><a href="#configuration">Configuration</a></li>
+        <li><a href="#running">Running</a></li>
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
@@ -55,23 +55,22 @@
   </ol>
 </details>
 
-
 <!-- ABOUT THE PROJECT -->
+
 ## About The Project
 
 Showcasing DeepSeek R1 deployment to Azure and integration with .NET and Semantic Kernel. This is a companion repository for blog post [Deploy and use DeepSeek R1 with Azure and .NET](https://www.uveta.io/categories/blog/deploy-and-use-deepseek-r1-with-azure-and-net/).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
 ### Built With
 
-* [![Dotnet][Dotnet.com]][Dotnet-url]
+- [![Dotnet][Dotnet.com]][Dotnet-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
 <!-- GETTING STARTED -->
+
 ## Getting Started
 
 To get a local copy up and running follow these simple steps.
@@ -85,40 +84,46 @@ You need to have .NET 9.0 SDK installed.
 1. Follow the steps in the blog post [Deploy and use DeepSeek R1 with Azure and .NET](https://www.uveta.io/categories/blog/deploy-and-use-deepseek-r1-with-azure-and-net/) to deploy DeepSeek R1 model to Azure cloud.
 2. Get endpoint URL, API key, and deployment name from deployment details, as shown in the blog post.
 3. Replace `<DEPLOYMENT-NAME>`, `<ENDPOINT-URL>`, and `<API-KEY>` in source code with your deployment info.
-  ```csharp
-  const string ModelId = "<DEPLOYMENT-NAME>";
-  const string Endpoint = "<ENDPOINT>";
-  const string ApiKey = "<API-KEY>";
-  ```
-4. Run any project using dotnet CLI or IDE of your choice.
-  ```pwsh
-  dotnet run --project src/DeepSeek.NET
-  dotnet run --project src/DeepSeek.SemanticKernel
-  ```
+
+```csharp
+const string ModelId = "<DEPLOYMENT-NAME>";
+const string Endpoint = "<ENDPOINT>";
+const string ApiKey = "<API-KEY>";
+```
+
+### Running
+
+Run any project using dotnet CLI or IDE of your choice.
+
+```pwsh
+dotnet run --project src/DeepSeek.NET
+dotnet run --project src/DeepSeek.SemanticKernel
+```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
 <!-- USAGE EXAMPLES -->
+
 ## Usage
 
 Run either `DeepSeek.NET` or `DeepSeek.SemanticKernel` project using dotnet CLI or IDE of your choice. If everything is configured correctly, you should see the output similar to the following:
 
 <!-- image/usage.png -->
+
 ![DeepSeek R1 console chat][product-screenshot]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
 <!-- LICENSE -->
+
 ## License
 
 Distributed under the MIT license. See [`LICENSE`](./LICENSE) for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
 <!-- CONTACT -->
+
 ## Contact
 
 Uroš Miletić - [@uveta](https://www.github.com/uveta)
@@ -127,9 +132,9 @@ Project Link: [https://github.com/uveta/demo-azure-deepseek](https://github.com/
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+
 [contributors-shield]: https://img.shields.io/github/contributors/uveta/demo-azure-deepseek.svg?style=for-the-badge
 [contributors-url]: https://github.com/uveta/demo-azure-deepseek/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/uveta/demo-azure-deepseek.svg?style=for-the-badge
